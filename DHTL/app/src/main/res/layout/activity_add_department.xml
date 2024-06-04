@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddDepartmentActivity"
+    tools:context=".activities.AddDepartmentActivity"
     android:padding="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -13,22 +13,22 @@
         android:theme="@style/Theme.DHTL"
         tools:targetApi="31">
         <activity
-            android:name=".AddDepartmentActivity"
+            android:name=".activities.AddDepartmentActivity"
             android:exported="false" />
         <activity
-            android:name=".AddStaffActivity"
+            android:name=".activities.AddStaffActivity"
             android:exported="false" />
         <activity
-            android:name=".DepartmentsActivity"
+            android:name=".activities.DepartmentsActivity"
             android:exported="false" />
         <activity
-            android:name=".DepartmentsView"
+            android:name=".activities.DepartmentsView"
             android:exported="false" />
         <activity
-            android:name=".StaffsActivity"
+            android:name=".activities.StaffsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
