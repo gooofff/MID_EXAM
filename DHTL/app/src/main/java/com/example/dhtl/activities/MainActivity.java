@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getStaffs(List<Staff> staffs){
-        StaffsAdapter adapter = new StaffsAdapter(staffs);
+        StaffsAdapter adapter = new StaffsAdapter(MainActivity.this, staffs);
         recyclerView.setAdapter(adapter);
     }
 }

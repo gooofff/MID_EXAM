@@ -25,7 +25,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tên liên lạc"
@@ -47,13 +47,29 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView3"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mã đơn vị"
-                android:textSize="20sp"
-                android:layout_marginBottom="5dp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mã đơn vị"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/edtID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="55dp"
+                    android:editable="false"
+                    android:ems="10"
+                    android:hint="ID"
+                    android:inputType="text"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,14 +77,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewa"
+                    android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tên đơn vị"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText"
+                    android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -84,14 +100,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3b"
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText3"
+                    android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -107,14 +123,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewb"
+                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Website"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText2"
+                    android:id="@+id/edtWebsite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -130,14 +146,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewb1"
+                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Địa chỉ"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText21"
+                    android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -153,14 +169,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3c"
+                    android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số điện thoại"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText4"
+                    android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -176,14 +192,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3e"
+                    android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mã đơn vị cha"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText5"
+                    android:id="@+id/edtParentID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -215,7 +231,7 @@
                 android:text="Xoá" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

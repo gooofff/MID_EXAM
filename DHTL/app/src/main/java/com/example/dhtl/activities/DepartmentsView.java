@@ -101,7 +101,7 @@ public class DepartmentsView extends AppCompatActivity {
     }
 
     private void getDepartments(List<Department> departments){
-        DepartmentsAdapter adapter = new DepartmentsAdapter(departments);
+        DepartmentsAdapter adapter = new DepartmentsAdapter(this, departments);
         recyclerView.setAdapter(adapter);
     }
 }
