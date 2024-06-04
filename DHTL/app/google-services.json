@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "611781330571",
+    "project_id": "dhtl-384b6",
+    "storage_bucket": "dhtl-384b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611781330571:android:8b9feeb98a8804c2d9768e",
+        "android_client_info": {
+          "package_name": "com.example.dhtl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9WMETxw9psV-aa6l91SvCy5kRkHiT5s8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
