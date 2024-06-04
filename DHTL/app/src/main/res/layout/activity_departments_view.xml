@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".DepartmentsView"
     android:padding="10dp">
 
     <LinearLayout
@@ -29,14 +29,14 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
-            android:hint="Tìm nhân viên"
+            android:hint="Tìm đơn vị"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="592dp"
+        android:layout_height="596dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:hint="Tạo nhân viên mới"
+                android:hint="Tạo đơn vị mới"
                 android:textColor="#74B9FF"
                 android:textColorHint="#74B9FF"
                 android:textSize="20sp" />
@@ -76,9 +76,10 @@
 
 
         <Button
-            android:id="@+id/btn_Departments"
+            android:id="@+id/btn_Staffs"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:text="Danh bạ đơn vị" />
+            android:layout_height="62dp"
+            android:text="Danh bạ nhân viên" />
     </LinearLayout>
+
 </LinearLayout>

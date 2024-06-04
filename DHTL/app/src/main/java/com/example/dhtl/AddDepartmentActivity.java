@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,39 +11,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
-    Button btn_Departments;
-    TextView txt_Add;
+public class AddDepartmentActivity extends AppCompatActivity {
+    Button btn_Back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_department);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        btn_Departments = findViewById(R.id.btn_Departments);
-        txt_Add = findViewById(R.id.txt_Add);
-
-        btn_Departments.setOnClickListener(new View.OnClickListener() {
+        btn_Back = findViewById(R.id.btn_Back);
+        btn_Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DepartmentsView.class);
-                startActivity(intent);
-            }
-        });
-
-        txt_Add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
+                Intent intent = new Intent(AddDepartmentActivity.this, DepartmentsView.class);
                 startActivity(intent);
             }
         });
     }
-
 }

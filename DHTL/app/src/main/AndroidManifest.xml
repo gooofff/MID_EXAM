@@ -13,6 +13,21 @@
         android:theme="@style/Theme.DHTL"
         tools:targetApi="31">
         <activity
+            android:name=".AddDepartmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddStaffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DepartmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DepartmentsView"
+            android:exported="false" />
+        <activity
+            android:name=".StaffsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

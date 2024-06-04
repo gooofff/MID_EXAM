@@ -12,28 +12,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
-    Button btn_Departments;
+public class DepartmentsView extends AppCompatActivity {
+    Button btn_Staffs;
     TextView txt_Add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_departments_view);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        btn_Departments = findViewById(R.id.btn_Departments);
+        btn_Staffs = findViewById(R.id.btn_Staffs);
         txt_Add = findViewById(R.id.txt_Add);
-
-        btn_Departments.setOnClickListener(new View.OnClickListener() {
+        btn_Staffs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DepartmentsView.class);
+                Intent intent = new Intent(DepartmentsView.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -41,10 +40,9 @@ public class MainActivity extends AppCompatActivity {
         txt_Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
+                Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
                 startActivity(intent);
             }
         });
     }
-
 }
