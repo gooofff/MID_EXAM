@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class DepartmentsView extends AppCompatActivity {
     Button btn_Staffs;
     TextView txt_Add;
+
+    ImageView img_Add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class DepartmentsView extends AppCompatActivity {
 
         btn_Staffs = findViewById(R.id.btn_Staffs);
         txt_Add = findViewById(R.id.txt_Add);
+        img_Add = findViewById(R.id.img_Add);
         btn_Staffs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,6 +42,14 @@ public class DepartmentsView extends AppCompatActivity {
         });
 
         txt_Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        img_Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
