@@ -11,29 +11,42 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="306dp">
+        android:layout_height="182dp">
 
-        <ImageButton
-            android:id="@+id/imgAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:shape="ring"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_user" />
+
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên liên lạc"
+            android:text="Chọn ảnh"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/cardview"
             app:layout_constraintVertical_bias="0.128" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,7 +73,7 @@
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextTextd"
+                    android:id="@+id/edtID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -83,7 +96,7 @@
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText"
+                    android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -106,7 +119,7 @@
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText2"
+                    android:id="@+id/edtPosition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -129,7 +142,7 @@
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText3"
+                    android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -152,7 +165,7 @@
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:id="@+id/editTextText4"
+                    android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -174,15 +187,11 @@
                     android:text="Mã đơn vị"
                     android:textSize="20sp"/>
 
-                <EditText
-                    android:id="@+id/editTextText5"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spinnerDepartmentID"
+                    android:layout_width="245dp"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="Mã đơn vị"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="50dp"/>
+                    android:layout_marginLeft="50dp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -193,7 +202,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_Add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

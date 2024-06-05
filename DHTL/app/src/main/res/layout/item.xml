@@ -7,12 +7,24 @@
     android:padding="16dp">
 
 
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_user"
-        android:scaleType="centerCrop" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:shape="ring"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="25dp">
+
+
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_user" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/textName"

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -21,7 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 public class StaffsActivity extends AppCompatActivity {
-    ImageButton imgAvatar;
+    ImageView imgAvatar;
     TextView txtName, edtID;
     EditText edtName, edtPosition, edtEmail, edtPhone, edtDepartmentID;
     Button btnBack;
@@ -36,7 +37,7 @@ public class StaffsActivity extends AppCompatActivity {
             return insets;
         });
 
-        imgAvatar = (ImageButton) findViewById(R.id.imgAvatar);
+        imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
         txtName = (TextView) findViewById(R.id.txtName);
         edtID = (TextView) findViewById(R.id.edtID);
         edtName = (EditText) findViewById(R.id.edtName);

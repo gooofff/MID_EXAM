@@ -30,11 +30,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    static final int ADD_STAFF_REQUEST_CODE = 1;
     Button btn_Departments;
     TextView txt_Add;
     ImageView img_Add;
     RecyclerView recyclerView;
     private FirebaseDatabaseHelper databaseHelper;
+    private List<Staff> staffs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseHelper = new FirebaseDatabaseHelper();
+        staffs = new ArrayList<>();
 
         btn_Departments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_STAFF_REQUEST_CODE);
             }
         });
 
@@ -74,14 +77,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_STAFF_REQUEST_CODE);
             }
         });
 
+        loadStaffs();
+    }
+
+    private void loadStaffs() {
         databaseHelper.getStaffsReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Staff> staffs = new ArrayList<>();
+                staffs.clear();
                 for (DataSnapshot tsnapshot : snapshot.getChildren()) {
                     Staff staff = tsnapshot.getValue(Staff.class);
                     staffs.add(staff);
@@ -97,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RealtimeDatabase", "Error getting data: ", error.toException());
             }
         });
-
-
     }
 
     private void getStaffs(List<Staff> staffs){
