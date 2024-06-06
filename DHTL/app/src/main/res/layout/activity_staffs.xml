@@ -11,16 +11,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="306dp">
+        android:layout_height="182dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_vertical"
             android:shape="ring"
             app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="100dp"
+            app:cardCornerRadius="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -30,10 +30,11 @@
 
             <ImageView
                 android:id="@+id/imgAvatar"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_user"
+                android:layout_gravity="center"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -187,15 +188,12 @@
                     android:text="Mã đơn vị"
                     android:textSize="20sp"/>
 
-                <EditText
-                    android:id="@+id/edtDepartmentID"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spinnerDepartmentID"
+                    android:layout_width="245dp"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="Mã đơn vị"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="50dp"/>
+                    android:layout_marginLeft="50dp"
+                    android:textSize="20sp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -203,17 +201,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Sửa" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dhtl.R;
+import com.example.dhtl.activities.MainActivity;
 import com.example.dhtl.activities.StaffsActivity;
 import com.example.dhtl.models.Staff;
 
@@ -41,6 +42,7 @@ public class StaffsAdapter extends RecyclerView.Adapter<StaffsAdapter.StaffViewH
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, StaffsActivity.class);
             intent.putExtra("staffID", staff.getStaffID());
+            ((MainActivity) context).startActivityForResult(intent, MainActivity.UPDATE_STAFF_REQUEST_CODE);
             context.startActivity(intent);
         });
     }

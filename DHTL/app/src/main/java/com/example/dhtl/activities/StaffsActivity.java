@@ -1,10 +1,14 @@
 package com.example.dhtl.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,15 +22,23 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.dhtl.R;
 import com.example.dhtl.firebase.FirebaseDatabaseHelper;
 import com.example.dhtl.models.Staff;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class StaffsActivity extends AppCompatActivity {
     ImageView imgAvatar;
     TextView txtName, edtID;
-    EditText edtName, edtPosition, edtEmail, edtPhone, edtDepartmentID;
-    Button btnBack;
+    EditText edtName, edtPosition, edtEmail, edtPhone;
+    Spinner spinnerDepartmentID;
+    FirebaseDatabaseHelper dbHelper;
+    Button btnUpdate, btnBack;
+    ArrayList<String> departmentIDs = new ArrayList<>();
+    String selectedDepartmentID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,22 +50,48 @@ public class StaffsActivity extends AppCompatActivity {
             return insets;
         });
 
-        imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
-        txtName = (TextView) findViewById(R.id.txtName);
-        edtID = (TextView) findViewById(R.id.edtID);
-        edtName = (EditText) findViewById(R.id.edtName);
-        edtPosition = (EditText) findViewById(R.id.edtPosition);
-        edtEmail = (EditText) findViewById(R.id.edtEmail);
-        edtPhone = (EditText) findViewById(R.id.edtPhone);
-        edtDepartmentID = (EditText) findViewById(R.id.edtDepartmentID);
-        btnBack = (Button) findViewById(R.id.btnBack);
+        imgAvatar = findViewById(R.id.imgAvatar);
+        txtName = findViewById(R.id.txtName);
+        edtID = findViewById(R.id.edtID);
+        edtName = findViewById(R.id.edtName);
+        edtPosition = findViewById(R.id.edtPosition);
+        edtEmail = findViewById(R.id.edtEmail);
+        edtPhone = findViewById(R.id.edtPhone);
+        spinnerDepartmentID = findViewById(R.id.spinnerDepartmentID);
+        btnUpdate = findViewById(R.id.btnUpdate);
+        btnBack = findViewById(R.id.btnBack);
+        dbHelper = new FirebaseDatabaseHelper();
+
+        loadDepartments();
+
 
         String staffID = getIntent().getStringExtra("staffID");
         if (staffID != null) {
             getStaffDetails(staffID);
         }
 
-        btnBack.setOnClickListener(v -> finish());
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateStaff();
+            }
+        });
+        btnBack.setOnClickListener(v -> {
+            setResult(RESULT_OK);
+            finish();
+        });
+
+        spinnerDepartmentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedDepartmentID = departmentIDs.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedDepartmentID = null;
+            }
+        });
     }
 
     private void getStaffDetails(String staffID) {
@@ -69,7 +107,7 @@ public class StaffsActivity extends AppCompatActivity {
                     edtEmail.setText(staff.getEmail());
                     edtPhone.setText(staff.getPhone());
                     edtPosition.setText(staff.getPosition());
-                    edtDepartmentID.setText(staff.getDepartmentID());
+                    selectedDepartmentID = staff.getDepartmentID();
 //                    Glide.with(StaffDetailActivity.this).load(staff.getAvatar()).into(imgStaff);
                 }
             }
@@ -77,6 +115,56 @@ public class StaffsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Xử lý lỗi nếu cần
+                Toast.makeText(StaffsActivity.this, "Lỗi khi tải dữ liệu nhân viên", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadDepartments() {
+        dbHelper.getDepartmentsReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                departmentIDs.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String departmentID = snapshot.getKey();
+                    departmentIDs.add(departmentID);
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(StaffsActivity.this, android.R.layout.simple_spinner_item, departmentIDs);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDepartmentID.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StaffsActivity.this, "Lỗi khi tải dữ liệu departments", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateStaff() {
+        String id = edtID.getText().toString().trim();
+        String name = edtName.getText().toString().trim();
+        String position = edtPosition.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
+        String phone = edtPhone.getText().toString().trim();
+        String departmentID = selectedDepartmentID;
+
+        if (id.isEmpty() || name.isEmpty() || email.isEmpty() || phone.isEmpty() || departmentID.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dbHelper.updateStaff(id, name, position, email, phone, departmentID, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(StaffsActivity.this, "Cập nhật nhân viên thành công", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);  // Thiết lập kết quả thành công
+                    finish();  // Đóng Activity
+                } else {
+                    Toast.makeText(StaffsActivity.this, "Cập nhật nhân viên thất bại", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -31,6 +31,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     static final int ADD_STAFF_REQUEST_CODE = 1;
+    public static final int UPDATE_STAFF_REQUEST_CODE = 2;
     Button btn_Departments;
     TextView txt_Add;
     ImageView img_Add;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_STAFF_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             // Tải lại danh sách nhân viên
             loadStaffs();
         }

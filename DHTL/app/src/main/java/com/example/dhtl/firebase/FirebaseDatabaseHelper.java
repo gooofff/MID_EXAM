@@ -51,4 +51,15 @@ public class FirebaseDatabaseHelper {
         departmentsRef.child(id).setValue(department).addOnCompleteListener(onCompleteListener);
     }
 
+    public void updateStaff(String id, String name, String position, String email, String phone, String departmentID, OnCompleteListener<Void> onCompleteListener) {
+        Map<String, Object> staff = new HashMap<>();
+        staff.put("staffID", id);
+        staff.put("name", name);
+        staff.put("position", position);
+        staff.put("email", email);
+        staff.put("phone", phone);
+        staff.put("departmentID", departmentID);
+
+        staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
+    }
 }
