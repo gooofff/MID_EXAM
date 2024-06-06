@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -22,7 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 public class DepartmentsActivity extends AppCompatActivity {
-    ImageButton imgLogo;
+    ImageView imgLogo;
     TextView txtName;
     EditText edtID, edtName, edtEmail, edtWebsite, edtAddress, edtPhone, edtParentID;
     Button btnBack;
@@ -38,7 +39,7 @@ public class DepartmentsActivity extends AppCompatActivity {
             return insets;
         });
 
-        imgLogo = (ImageButton) findViewById(R.id.imgLogo);
+        imgLogo = (ImageView) findViewById(R.id.imgLogo);
         txtName = (TextView) findViewById(R.id.txtName);
         edtID = (EditText) findViewById(R.id.edtID);
         edtName = (EditText) findViewById(R.id.edtName);
@@ -47,6 +48,7 @@ public class DepartmentsActivity extends AppCompatActivity {
         edtAddress = (EditText) findViewById(R.id.edtAddress);
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtParentID = (EditText) findViewById(R.id.edtParentID);
+
         btnBack = (Button) findViewById(R.id.btnBack);
 
         String departmentID = getIntent().getStringExtra("departmentID");

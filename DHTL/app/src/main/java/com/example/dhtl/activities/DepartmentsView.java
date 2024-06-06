@@ -32,11 +32,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class DepartmentsView extends AppCompatActivity {
+    static final int ADD_DEPARTMENT_REQUEST_CODE = 1;
     Button btn_Staffs;
     TextView txt_Add;
     ImageView img_Add;
     RecyclerView recyclerView;
     private FirebaseDatabaseHelper databaseHelper;
+    private List<Department> departments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class DepartmentsView extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseHelper = new FirebaseDatabaseHelper();
+        departments = new ArrayList<>();
+
         btn_Staffs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +71,7 @@ public class DepartmentsView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_DEPARTMENT_REQUEST_CODE);
             }
         });
 
@@ -75,14 +79,18 @@ public class DepartmentsView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_DEPARTMENT_REQUEST_CODE);
             }
         });
 
+        loadDepartments();
+    }
+
+    private void loadDepartments() {
         databaseHelper.getDepartmentsReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Department> departments = new ArrayList<>();
+                departments.clear();
                 for (DataSnapshot tsnapshot : snapshot.getChildren()) {
                     Department department = tsnapshot.getValue(Department.class);
                     departments.add(department);
@@ -103,5 +111,14 @@ public class DepartmentsView extends AppCompatActivity {
     private void getDepartments(List<Department> departments){
         DepartmentsAdapter adapter = new DepartmentsAdapter(this, departments);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_DEPARTMENT_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Tải lại danh sách nhân viên
+            loadDepartments();
+        }
     }
 }

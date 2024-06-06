@@ -28,7 +28,7 @@ public class FirebaseDatabaseHelper {
 
     public void addStaff(String id, String name, String position, String email, String phone, String departmentID, OnCompleteListener<Void> onCompleteListener) {
         Map<String, Object> staff = new HashMap<>();
-        staff.put("id", id);
+        staff.put("staffID", id);
         staff.put("name", name);
         staff.put("position", position);
         staff.put("email", email);
@@ -36,6 +36,19 @@ public class FirebaseDatabaseHelper {
         staff.put("departmentID", departmentID);
 
         staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
+    }
+
+    public void addDepartment(String id, String name, String email, String website, String address, String phone, String departmentID, OnCompleteListener<Void> onCompleteListener) {
+        Map<String, Object> department = new HashMap<>();
+        department.put("departmentID", id);
+        department.put("name", name);
+        department.put("email", email);
+        department.put("website", website);
+        department.put("address", address);
+        department.put("phone", phone);
+        department.put("parentID", departmentID);
+
+        departmentsRef.child(id).setValue(department).addOnCompleteListener(onCompleteListener);
     }
 
 }

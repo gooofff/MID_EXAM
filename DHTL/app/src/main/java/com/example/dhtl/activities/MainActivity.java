@@ -110,4 +110,13 @@ public class MainActivity extends AppCompatActivity {
         StaffsAdapter adapter = new StaffsAdapter(MainActivity.this, staffs);
         recyclerView.setAdapter(adapter);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_STAFF_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Tải lại danh sách nhân viên
+            loadStaffs();
+        }
+    }
 }
