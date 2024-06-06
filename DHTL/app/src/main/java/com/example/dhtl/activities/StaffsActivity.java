@@ -1,5 +1,7 @@
 package com.example.dhtl.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -36,7 +39,7 @@ public class StaffsActivity extends AppCompatActivity {
     EditText edtName, edtPosition, edtEmail, edtPhone;
     Spinner spinnerDepartmentID;
     FirebaseDatabaseHelper dbHelper;
-    Button btnUpdate, btnBack;
+    Button btnDelete, btnUpdate, btnBack;
     ArrayList<String> departmentIDs = new ArrayList<>();
     String selectedDepartmentID;
     @Override
@@ -59,6 +62,7 @@ public class StaffsActivity extends AppCompatActivity {
         edtPhone = findViewById(R.id.edtPhone);
         spinnerDepartmentID = findViewById(R.id.spinnerDepartmentID);
         btnUpdate = findViewById(R.id.btnUpdate);
+        btnDelete = findViewById(R.id.btnDelete);
         btnBack = findViewById(R.id.btnBack);
         dbHelper = new FirebaseDatabaseHelper();
 
@@ -74,6 +78,25 @@ public class StaffsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateStaff();
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(StaffsActivity.this)
+                        .setTitle("Xác nhận xóa")
+                        .setMessage("Bạn có chắc chắn muốn xóa nhân viên này không?")
+                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String staffID = getIntent().getStringExtra("staffID");
+                                if (staffID != null) {
+                                    deleteStaff(staffID);
+                                }
+                            }
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
             }
         });
         btnBack.setOnClickListener(v -> {
@@ -164,6 +187,22 @@ public class StaffsActivity extends AppCompatActivity {
                     finish();  // Đóng Activity
                 } else {
                     Toast.makeText(StaffsActivity.this, "Cập nhật nhân viên thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    private void deleteStaff(String staffID) {
+        dbHelper.deleteStaff(staffID, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(StaffsActivity.this, "Xóa nhân viên thành công", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(StaffsActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(StaffsActivity.this, "Xóa nhân viên thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
         });

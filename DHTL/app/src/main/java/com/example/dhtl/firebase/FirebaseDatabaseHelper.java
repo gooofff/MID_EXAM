@@ -62,4 +62,8 @@ public class FirebaseDatabaseHelper {
 
         staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
     }
+
+    public void deleteStaff(String staffID, OnCompleteListener<Void> onCompleteListener) {
+        staffsRef.child(staffID).removeValue().addOnCompleteListener(onCompleteListener);
+    }
 }
