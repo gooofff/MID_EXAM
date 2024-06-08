@@ -197,9 +197,7 @@ public class StaffsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(StaffsActivity.this, "Xóa nhân viên thành công", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(StaffsActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(StaffsActivity.this, "Xóa nhân viên thất bại", Toast.LENGTH_SHORT).show();

@@ -43,13 +43,18 @@ public class StaffsAdapter extends RecyclerView.Adapter<StaffsAdapter.StaffViewH
             Intent intent = new Intent(context, StaffsActivity.class);
             intent.putExtra("staffID", staff.getStaffID());
             ((MainActivity) context).startActivityForResult(intent, MainActivity.UPDATE_STAFF_REQUEST_CODE);
-            context.startActivity(intent);
+            notifyDataSetChanged();
         });
     }
 
     @Override
     public int getItemCount() {
         return staffs.size();
+    }
+
+    public void filterList(List<Staff> filteredList) {
+        staffs = filteredList;
+        notifyDataSetChanged();
     }
 
     public static class StaffViewHolder extends RecyclerView.ViewHolder {

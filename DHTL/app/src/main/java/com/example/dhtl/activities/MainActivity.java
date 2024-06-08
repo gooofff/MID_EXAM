@@ -2,9 +2,12 @@ package com.example.dhtl.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
     Button btn_Departments;
     TextView txt_Add;
     ImageView img_Add;
+    EditText edtSearch;
     RecyclerView recyclerView;
     private FirebaseDatabaseHelper databaseHelper;
     private List<Staff> staffs;
+    private StaffsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
         btn_Departments = findViewById(R.id.btn_Departments);
         txt_Add = findViewById(R.id.txt_Add);
         img_Add = findViewById(R.id.img_Add);
+        edtSearch = findViewById(R.id.edtSearch);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseHelper = new FirebaseDatabaseHelper();
         staffs = new ArrayList<>();
+
+        adapter = new StaffsAdapter(MainActivity.this, staffs);
+        recyclerView.setAdapter(adapter);
 
         btn_Departments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
                 startActivityForResult(intent, ADD_STAFF_REQUEST_CODE);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -79,6 +89,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddStaffActivity.class);
                 startActivityForResult(intent, ADD_STAFF_REQUEST_CODE);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -97,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 // Sắp xếp danh sách người dùng theo tên
                 Collections.sort(staffs, (u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
                 // Hiển thị danh sách
-                getStaffs(staffs);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -107,9 +135,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getStaffs(List<Staff> staffs){
-        StaffsAdapter adapter = new StaffsAdapter(MainActivity.this, staffs);
-        recyclerView.setAdapter(adapter);
+    private void filter(String text) {
+        List<Staff> filteredList = new ArrayList<>();
+        for (Staff staff : staffs) {
+            if (staff.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(staff);
+            }
+        }
+        adapter.filterList(filteredList);
     }
 
     @Override
