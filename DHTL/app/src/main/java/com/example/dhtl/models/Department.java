@@ -18,6 +18,11 @@ public class Department {
         this.parentID = parentID;
     }
 
+    public Department(String departmentID, String name) {
+        this.departmentID = departmentID;
+        this.name = name;
+    }
+
     public String getDepartmentID() {
         return departmentID;
     }
@@ -80,5 +85,10 @@ public class Department {
 
     public void setParentID(String parentID) {
         this.parentID = parentID;
+    }
+
+    @Override
+    public String toString() {
+        return name; // Trả về tên để hiển thị trong Spinner
     }
 }

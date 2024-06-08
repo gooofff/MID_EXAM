@@ -2,7 +2,12 @@ package com.example.dhtl.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,9 +36,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class StaffsActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
     ImageView imgAvatar;
     TextView txtName, edtID;
     EditText edtName, edtPosition, edtEmail, edtPhone;
@@ -42,6 +49,7 @@ public class StaffsActivity extends AppCompatActivity {
     Button btnDelete, btnUpdate, btnBack;
     ArrayList<String> departmentIDs = new ArrayList<>();
     String selectedDepartmentID;
+    Uri selectedImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +81,13 @@ public class StaffsActivity extends AppCompatActivity {
         if (staffID != null) {
             getStaffDetails(staffID);
         }
+
+        imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
+            }
+        });
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +132,21 @@ public class StaffsActivity extends AppCompatActivity {
         });
     }
 
+    private void openImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            imgAvatar.setImageURI(selectedImageUri);
+        }
+    }
+
     private void getStaffDetails(String staffID) {
         FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper();
         databaseHelper.getStaffsReference().child(staffID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -131,7 +161,20 @@ public class StaffsActivity extends AppCompatActivity {
                     edtPhone.setText(staff.getPhone());
                     edtPosition.setText(staff.getPosition());
                     selectedDepartmentID = staff.getDepartmentID();
-//                    Glide.with(StaffDetailActivity.this).load(staff.getAvatar()).into(imgStaff);
+
+                    if (staff.getAvatar() != null && !staff.getAvatar().isEmpty()) {
+                        try {
+                            byte[] decodedString = Base64.decode(staff.getAvatar(), Base64.NO_WRAP);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            imgAvatar.setImageBitmap(decodedByte);
+                        } catch (IllegalArgumentException e) {
+                            // Xử lý lỗi giải mã Base64 không hợp lệ ở đây (ví dụ: hiển thị một ảnh mặc định)
+                            e.printStackTrace();
+                            imgAvatar.setImageResource(R.drawable.ic_user);
+                        }
+                    } else {
+                        imgAvatar.setImageResource(R.drawable.ic_user); // Ảnh mặc định nếu không có ảnh
+                    }
                 }
             }
 
@@ -149,8 +192,10 @@ public class StaffsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 departmentIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String departmentID = snapshot.getKey();
-                    departmentIDs.add(departmentID);
+                    String departmentID = snapshot.child("name").getValue(String.class);
+                    if (departmentID != null) {
+                        departmentIDs.add(departmentID);
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(StaffsActivity.this, android.R.layout.simple_spinner_item, departmentIDs);
@@ -178,7 +223,12 @@ public class StaffsActivity extends AppCompatActivity {
             return;
         }
 
-        dbHelper.updateStaff(id, name, position, email, phone, departmentID, new OnCompleteListener<Void>() {
+        String avatarBase64 = "";
+        if (selectedImageUri != null) {
+            avatarBase64 = encodeImageToBase64();
+        }
+
+        dbHelper.updateStaff(id, name, position, email, phone, departmentID, avatarBase64, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -191,6 +241,16 @@ public class StaffsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private String encodeImageToBase64() {
+        BitmapDrawable drawable = (BitmapDrawable) imgAvatar.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
     private void deleteStaff(String staffID) {
         dbHelper.deleteStaff(staffID, new OnCompleteListener<Void>() {
             @Override

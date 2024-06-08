@@ -52,7 +52,7 @@ public class FirebaseDatabaseHelper {
         departmentsRef.child(id).setValue(department).addOnCompleteListener(onCompleteListener);
     }
 
-    public void updateStaff(String id, String name, String position, String email, String phone, String departmentID, OnCompleteListener<Void> onCompleteListener) {
+    public void updateStaff(String id, String name, String position, String email, String phone, String departmentID, String avatarBase64, OnCompleteListener<Void> onCompleteListener) {
         Map<String, Object> staff = new HashMap<>();
         staff.put("staffID", id);
         staff.put("name", name);
@@ -60,6 +60,7 @@ public class FirebaseDatabaseHelper {
         staff.put("email", email);
         staff.put("phone", phone);
         staff.put("departmentID", departmentID);
+        staff.put("avatar", avatarBase64);
 
         staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
     }
