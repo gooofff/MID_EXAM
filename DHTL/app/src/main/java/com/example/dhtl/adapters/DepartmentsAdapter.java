@@ -57,7 +57,7 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
         TextView textName;
         public DepartmentViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgStaff = itemView.findViewById(R.id.imgView);
+            imgStaff = itemView.findViewById(R.id.imgAvatar);
             textName = itemView.findViewById(R.id.textName);
         }
     }

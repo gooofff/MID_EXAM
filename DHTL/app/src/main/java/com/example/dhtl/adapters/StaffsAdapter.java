@@ -2,6 +2,9 @@ package com.example.dhtl.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dhtl.R;
@@ -37,8 +41,22 @@ public class StaffsAdapter extends RecyclerView.Adapter<StaffsAdapter.StaffViewH
     public void onBindViewHolder(@NonNull StaffViewHolder holder, int position) {
         Staff staff = staffs.get(position);
         holder.textName.setText(staff.getName());
-        // Load ảnh đại diện, bạn có thể sử dụng thư viện như Glide hoặc Picasso
-        // Glide.with(holder.imageUser.getContext()).load(user.image).into(holder.imageUser);
+
+        // Giải mã chuỗi Base64 và hiển thị ảnh
+        if (staff.getAvatar() != null && !staff.getAvatar().isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(staff.getAvatar(), Base64.NO_WRAP);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                holder.imgAvatar.setImageBitmap(decodedByte);
+            } catch (IllegalArgumentException e) {
+                // Xử lý lỗi giải mã Base64 không hợp lệ ở đây (ví dụ: hiển thị một ảnh mặc định)
+                e.printStackTrace();
+                holder.imgAvatar.setImageResource(R.drawable.ic_user);
+            }
+        } else {
+            holder.imgAvatar.setImageResource(R.drawable.ic_user); // Ảnh mặc định nếu không có ảnh
+        }
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, StaffsActivity.class);
             intent.putExtra("staffID", staff.getStaffID());
@@ -58,12 +76,14 @@ public class StaffsAdapter extends RecyclerView.Adapter<StaffsAdapter.StaffViewH
     }
 
     public static class StaffViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgStaff;
+        ImageView imgAvatar;
         TextView textName;
+        CardView cardView;
         public StaffViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgStaff = itemView.findViewById(R.id.imgView);
+            imgAvatar = itemView.findViewById(R.id.imgAvatar);
             textName = itemView.findViewById(R.id.textName);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }

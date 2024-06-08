@@ -1,8 +1,11 @@
 package com.example.dhtl.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +31,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class AddStaffActivity extends AppCompatActivity {
@@ -39,6 +43,7 @@ public class AddStaffActivity extends AppCompatActivity {
     FirebaseDatabaseHelper dbHelper;
     ArrayList<String> departmentIDs = new ArrayList<>();
     String selectedDepartmentID;
+    Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,13 @@ public class AddStaffActivity extends AppCompatActivity {
 
         loadDepartments();
 
+        imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
+            }
+        });
+
         spinnerDepartmentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -90,6 +102,21 @@ public class AddStaffActivity extends AppCompatActivity {
         });
     }
 
+    private void openImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            imgAvatar.setImageURI(selectedImageUri);
+        }
+    }
+
     private void addStaff() {
         String id = edtID.getText().toString().trim();
         String name = edtName.getText().toString().trim();
@@ -103,7 +130,12 @@ public class AddStaffActivity extends AppCompatActivity {
             return;
         }
 
-        dbHelper.addStaff(id, name, position, email, phone, departmentID, new OnCompleteListener<Void>() {
+        String avatarBase64 = "";
+        if (selectedImageUri != null) {
+            avatarBase64 = encodeImageToBase64();
+        }
+
+        dbHelper.addStaff(id, name, position, email, phone, departmentID, avatarBase64, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -115,6 +147,15 @@ public class AddStaffActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String encodeImageToBase64() {
+        BitmapDrawable drawable = (BitmapDrawable) imgAvatar.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     private void loadDepartments() {
