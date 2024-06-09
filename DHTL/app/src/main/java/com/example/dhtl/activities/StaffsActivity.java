@@ -29,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.dhtl.R;
 import com.example.dhtl.firebase.FirebaseDatabaseHelper;
+import com.example.dhtl.models.Department;
 import com.example.dhtl.models.Staff;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +48,7 @@ public class StaffsActivity extends AppCompatActivity {
     Spinner spinnerDepartmentID;
     FirebaseDatabaseHelper dbHelper;
     Button btnDelete, btnUpdate, btnBack;
-    ArrayList<String> departmentIDs = new ArrayList<>();
+    ArrayList<Department> departments = new ArrayList<>();
     String selectedDepartmentID;
     Uri selectedImageUri;
     @Override
@@ -74,7 +75,7 @@ public class StaffsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         dbHelper = new FirebaseDatabaseHelper();
 
-        loadDepartments();
+        loadDepartmentsAndSetSelection();
 
 
         String staffID = getIntent().getStringExtra("staffID");
@@ -122,7 +123,8 @@ public class StaffsActivity extends AppCompatActivity {
         spinnerDepartmentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedDepartmentID = departmentIDs.get(position);
+                Department selectedDepartment = (Department) parent.getItemAtPosition(position);
+                selectedDepartmentID = selectedDepartment.getDepartmentID();
             }
 
             @Override
@@ -175,6 +177,7 @@ public class StaffsActivity extends AppCompatActivity {
                     } else {
                         imgAvatar.setImageResource(R.drawable.ic_user); // Ảnh mặc định nếu không có ảnh
                     }
+                    loadDepartmentsAndSetSelection();
                 }
             }
 
@@ -186,21 +189,24 @@ public class StaffsActivity extends AppCompatActivity {
         });
     }
 
-    private void loadDepartments() {
+    private void loadDepartmentsAndSetSelection() {
         dbHelper.getDepartmentsReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                departmentIDs.clear();
+                departments.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String departmentID = snapshot.child("name").getValue(String.class);
-                    if (departmentID != null) {
-                        departmentIDs.add(departmentID);
+                    String departmentID = snapshot.getKey();
+                    String departmentName = snapshot.child("name").getValue(String.class);
+                    if (departmentID != null && departmentName != null) {
+                        departments.add(new Department(departmentID, departmentName));
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(StaffsActivity.this, android.R.layout.simple_spinner_item, departmentIDs);
+                ArrayAdapter<Department> adapter = new ArrayAdapter<>(StaffsActivity.this, android.R.layout.simple_spinner_item, departments);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerDepartmentID.setAdapter(adapter);
+
+                setSpinnerSelection();
             }
 
             @Override
@@ -208,6 +214,14 @@ public class StaffsActivity extends AppCompatActivity {
                 Toast.makeText(StaffsActivity.this, "Lỗi khi tải dữ liệu departments", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void setSpinnerSelection() {
+        for (int i = 0; i < departments.size(); i++) {
+            if (departments.get(i).getDepartmentID().equals(selectedDepartmentID)) {
+                spinnerDepartmentID.setSelection(i);
+                break;
+            }
+        }
     }
 
     private void updateStaff() {
@@ -226,6 +240,13 @@ public class StaffsActivity extends AppCompatActivity {
         String avatarBase64 = "";
         if (selectedImageUri != null) {
             avatarBase64 = encodeImageToBase64();
+        }
+        else {
+            // Lấy avatar hiện tại từ ImageView nếu không có ảnh mới được chọn
+            BitmapDrawable drawable = (BitmapDrawable) imgAvatar.getDrawable();
+            if (drawable != null) {
+                avatarBase64 = encodeImageToBase64();
+            }
         }
 
         dbHelper.updateStaff(id, name, position, email, phone, departmentID, avatarBase64, new OnCompleteListener<Void>() {
