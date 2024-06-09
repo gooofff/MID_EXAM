@@ -95,8 +95,7 @@ public class AddStaffActivity extends AppCompatActivity {
         btn_Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addStaff();
-            }
+                checkForDuplicates();            }
         });
         btn_Back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +121,53 @@ public class AddStaffActivity extends AppCompatActivity {
         }
     }
 
+    private void checkForDuplicates() {
+        String id = edtID.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
+        String phone = edtPhone.getText().toString().trim();
+
+        if (id.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dbHelper.getStaffsReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean isDuplicate = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String existingID = snapshot.child("staffID").getValue(String.class);
+                    String existingEmail = snapshot.child("email").getValue(String.class);
+                    String existingPhone = snapshot.child("phone").getValue(String.class);
+
+                    if (id.equals(existingID)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddStaffActivity.this, "Mã nhân viên đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (email.equals(existingEmail)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddStaffActivity.this, "Email đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (phone.equals(existingPhone)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddStaffActivity.this, "Số điện thoại đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    addStaff();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AddStaffActivity.this, "Lỗi khi kiểm tra trùng lặp", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void addStaff() {
         String id = edtID.getText().toString().trim();
         String name = edtName.getText().toString().trim();
@@ -134,6 +180,7 @@ public class AddStaffActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
+
         if (position.isEmpty()) {
             position = "null";
         }

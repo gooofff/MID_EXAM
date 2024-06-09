@@ -101,7 +101,7 @@ public class AddDepartmentActivity extends AppCompatActivity {
         btn_Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDepartment();
+                checkForDuplicates();
             }
         });
         btn_Back.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +126,60 @@ public class AddDepartmentActivity extends AppCompatActivity {
             imgLogo.setImageURI(selectedImageUri);
             txtAdd.setVisibility(View.GONE);
         }
+    }
+
+    private void checkForDuplicates() {
+        String id = edtDepartmentID.getText().toString().trim();
+        String name = edtName.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
+        String phone = edtPhone.getText().toString().trim();
+
+        if (id.isEmpty() || email.isEmpty() || phone.isEmpty() || name.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dbHelper.getDepartmentsReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean isDuplicate = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String existingID = snapshot.child("departmentID").getValue(String.class);
+                    String existingName = snapshot.child("name").getValue(String.class);
+                    String existingEmail = snapshot.child("email").getValue(String.class);
+                    String existingPhone = snapshot.child("phone").getValue(String.class);
+
+                    if (id.equals(existingID)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddDepartmentActivity.this, "Mã đơn vị đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (name.equals(existingName)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddDepartmentActivity.this, "Đơn vị đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (email.equals(existingEmail)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddDepartmentActivity.this, "Email đơn vị đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (phone.equals(existingPhone)) {
+                        isDuplicate = true;
+                        Toast.makeText(AddDepartmentActivity.this, "Số điện thoại đơn vị đã tồn tại", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    addDepartment();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AddDepartmentActivity.this, "Lỗi khi kiểm tra trùng lặp", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addDepartment() {
