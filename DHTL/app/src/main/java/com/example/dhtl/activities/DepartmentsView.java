@@ -151,8 +151,10 @@ public class DepartmentsView extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // Tải lại danh sách đơn vị
-            loadDepartments();
+            if (requestCode == ADD_DEPARTMENT_REQUEST_CODE || requestCode == UPDATE_DEPARTMENT_REQUEST_CODE) {
+                // Tải lại danh sách departments sau khi thêm hoặc cập nhật
+                loadDepartments();
+            }
         }
     }
 }

@@ -49,6 +49,7 @@ public class DepartmentsActivity extends AppCompatActivity {
     FirebaseDatabaseHelper dbHelper;
     Button btnDelete, btnUpdate, btnBack;
     ArrayList<Department> departments = new ArrayList<>();
+    ArrayList<String> departmentNames = new ArrayList<>();
     String selectedDepartmentID;
     Uri selectedImageUri;
 
@@ -125,8 +126,14 @@ public class DepartmentsActivity extends AppCompatActivity {
         spinnerParentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Department selectedDepartment = (Department) parent.getItemAtPosition(position);
-                selectedDepartmentID = selectedDepartment.getDepartmentID();
+                if (position == 0) {
+                    selectedDepartmentID = "null";
+                } else {
+                    Department selectedDepartment = departments.get(position - 1);
+                    selectedDepartmentID = selectedDepartment.getDepartmentID();
+                }
+//                Department selectedDepartment = (Department) parent.getItemAtPosition(position);
+//                selectedDepartmentID = selectedDepartment.getDepartmentID();
             }
 
             @Override
@@ -208,15 +215,20 @@ public class DepartmentsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 departments.clear();
+                departmentNames.clear();
+
+                departmentNames.add("Không có");
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String departmentID = snapshot.getKey();
                     String departmentName = snapshot.child("name").getValue(String.class);
                     if (departmentID != null && departmentName != null) {
                         departments.add(new Department(departmentID, departmentName));
+                        departmentNames.add(departmentName);
                     }
                 }
 
-                ArrayAdapter<Department> adapter = new ArrayAdapter<>(DepartmentsActivity.this, android.R.layout.simple_spinner_item, departments);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(DepartmentsActivity.this, android.R.layout.simple_spinner_item, departmentNames);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerParentID.setAdapter(adapter);
 
@@ -231,10 +243,14 @@ public class DepartmentsActivity extends AppCompatActivity {
     }
 
     private void setSpinnerSelection() {
-        for (int i = 0; i < departments.size(); i++) {
-            if (departments.get(i).getDepartmentID().equals(selectedDepartmentID)) {
-                spinnerParentID.setSelection(i);
-                break;
+        if (selectedDepartmentID == null || selectedDepartmentID.equals("null")) {
+            spinnerParentID.setSelection(0); // Chọn mục "Không có"
+        } else {
+            for (int i = 0; i < departments.size(); i++) {
+                if (departments.get(i).getDepartmentID().equals(selectedDepartmentID)) {
+                    spinnerParentID.setSelection(i + 1);
+                    break;
+                }
             }
         }
     }
