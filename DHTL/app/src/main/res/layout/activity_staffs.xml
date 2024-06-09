@@ -64,7 +64,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="7dp">
 
                 <TextView
                     android:id="@+id/textView0"
@@ -144,11 +145,11 @@
                     android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="85dp"
                     android:ems="10"
-                    android:inputType="text"
                     android:hint="Email"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="85dp"/>
+                    android:inputType="text|textEmailAddress"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -167,17 +168,18 @@
                     android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:ems="10"
-                    android:inputType="text"
                     android:hint="Số điện thoại"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="20dp"/>
+                    android:inputType="phone"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:id="@+id/textView5"

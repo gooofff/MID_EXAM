@@ -161,7 +161,12 @@ public class StaffsActivity extends AppCompatActivity {
                     edtName.setText(staff.getName());
                     edtEmail.setText(staff.getEmail());
                     edtPhone.setText(staff.getPhone());
-                    edtPosition.setText(staff.getPosition());
+                    if (staff.getPosition().equals("null")) {
+                        edtPosition.setText("Không có");
+                    }
+                    else {
+                        edtPosition.setText(staff.getPosition());
+                    }
                     selectedDepartmentID = staff.getDepartmentID();
 
                     if (staff.getAvatar() != null && !staff.getAvatar().isEmpty()) {
@@ -228,6 +233,9 @@ public class StaffsActivity extends AppCompatActivity {
         String id = edtID.getText().toString().trim();
         String name = edtName.getText().toString().trim();
         String position = edtPosition.getText().toString().trim();
+        if (position.equals("Không có")) {
+            position = "null";
+        }
         String email = edtEmail.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
         String departmentID = selectedDepartmentID;

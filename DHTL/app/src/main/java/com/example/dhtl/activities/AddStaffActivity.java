@@ -134,6 +134,9 @@ public class AddStaffActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (position.isEmpty()) {
+            position = "null";
+        }
 
         String avatarBase64 = "";
         if (selectedImageUri != null) {

@@ -39,7 +39,7 @@ public class FirebaseDatabaseHelper {
         staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
     }
 
-    public void addDepartment(String id, String name, String email, String website, String address, String phone, String departmentID, OnCompleteListener<Void> onCompleteListener) {
+    public void addDepartment(String id, String name, String email, String website, String address, String phone, String departmentID, String logo, OnCompleteListener<Void> onCompleteListener) {
         Map<String, Object> department = new HashMap<>();
         department.put("departmentID", id);
         department.put("name", name);
@@ -48,6 +48,7 @@ public class FirebaseDatabaseHelper {
         department.put("address", address);
         department.put("phone", phone);
         department.put("parentID", departmentID);
+        department.put("logo", logo);
 
         departmentsRef.child(id).setValue(department).addOnCompleteListener(onCompleteListener);
     }
@@ -65,7 +66,25 @@ public class FirebaseDatabaseHelper {
         staffsRef.child(id).setValue(staff).addOnCompleteListener(onCompleteListener);
     }
 
+    public void updateDepartment(String id, String name, String email, String website, String address, String phone, String departmentID, String logoBase64, OnCompleteListener<Void> onCompleteListener) {
+        Map<String, Object> department = new HashMap<>();
+        department.put("departmentID", id);
+        department.put("name", name);
+        department.put("email", email);
+        department.put("website", website);
+        department.put("address", address);
+        department.put("phone", phone);
+        department.put("parentID", departmentID);
+        department.put("logo", logoBase64);
+
+        departmentsRef.child(id).setValue(department).addOnCompleteListener(onCompleteListener);
+    }
+
     public void deleteStaff(String staffID, OnCompleteListener<Void> onCompleteListener) {
         staffsRef.child(staffID).removeValue().addOnCompleteListener(onCompleteListener);
+    }
+
+    public void deleteDepartment(String departmentID, OnCompleteListener<Void> onCompleteListener) {
+        departmentsRef.child(departmentID).removeValue().addOnCompleteListener(onCompleteListener);
     }
 }

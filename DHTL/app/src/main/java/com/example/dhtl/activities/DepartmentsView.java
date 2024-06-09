@@ -2,9 +2,12 @@ package com.example.dhtl.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,12 +36,15 @@ import java.util.List;
 
 public class DepartmentsView extends AppCompatActivity {
     static final int ADD_DEPARTMENT_REQUEST_CODE = 1;
+    public static final int UPDATE_DEPARTMENT_REQUEST_CODE = 2;
     Button btn_Staffs;
     TextView txt_Add;
     ImageView img_Add;
+    EditText edtSearch;
     RecyclerView recyclerView;
     private FirebaseDatabaseHelper databaseHelper;
     private List<Department> departments;
+    private DepartmentsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +60,14 @@ public class DepartmentsView extends AppCompatActivity {
         btn_Staffs = findViewById(R.id.btn_Staffs);
         txt_Add = findViewById(R.id.txt_Add);
         img_Add = findViewById(R.id.img_Add);
+        edtSearch = findViewById(R.id.edtSearch);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseHelper = new FirebaseDatabaseHelper();
         departments = new ArrayList<>();
+
+        adapter = new DepartmentsAdapter(DepartmentsView.this, departments);
+        recyclerView.setAdapter(adapter);
 
         btn_Staffs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +82,7 @@ public class DepartmentsView extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
                 startActivityForResult(intent, ADD_DEPARTMENT_REQUEST_CODE);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -80,6 +91,24 @@ public class DepartmentsView extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DepartmentsView.this, AddDepartmentActivity.class);
                 startActivityForResult(intent, ADD_DEPARTMENT_REQUEST_CODE);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -98,7 +127,7 @@ public class DepartmentsView extends AppCompatActivity {
                 // Sắp xếp danh sách người dùng theo tên
                 Collections.sort(departments, (u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
                 // Hiển thị danh sách
-                getDepartments(departments);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -108,16 +137,21 @@ public class DepartmentsView extends AppCompatActivity {
         });
     }
 
-    private void getDepartments(List<Department> departments){
-        DepartmentsAdapter adapter = new DepartmentsAdapter(this, departments);
-        recyclerView.setAdapter(adapter);
+    private void filter(String text) {
+        List<Department> filteredList = new ArrayList<>();
+        for (Department department : departments) {
+            if (department.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(department);
+            }
+        }
+        adapter.filterList(filteredList);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_DEPARTMENT_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Tải lại danh sách nhân viên
+        if (resultCode == RESULT_OK) {
+            // Tải lại danh sách đơn vị
             loadDepartments();
         }
     }
