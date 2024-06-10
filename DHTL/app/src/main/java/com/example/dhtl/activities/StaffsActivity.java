@@ -48,6 +48,7 @@ public class StaffsActivity extends AppCompatActivity {
     Spinner spinnerDepartmentID;
     FirebaseDatabaseHelper dbHelper;
     Button btnDelete, btnUpdate, btnBack;
+    ImageButton btnCall, btnSMS;
     ArrayList<Department> departments = new ArrayList<>();
     String selectedDepartmentID;
     Uri selectedImageUri;
@@ -73,6 +74,8 @@ public class StaffsActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
         btnDelete = findViewById(R.id.btnDelete);
         btnBack = findViewById(R.id.btnBack);
+        btnCall = findViewById(R.id.btnCall);
+        btnSMS = findViewById(R.id.btnSMS);
         dbHelper = new FirebaseDatabaseHelper();
 
         loadDepartmentsAndSetSelection();
@@ -118,6 +121,26 @@ public class StaffsActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> {
             setResult(RESULT_OK);
             finish();
+        });
+
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = edtPhone.getText().toString().trim();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            }
+        });
+
+        btnSMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = edtPhone.getText().toString().trim();
+                Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                smsIntent.setData(Uri.parse("sms:" + phoneNumber));
+                startActivity(smsIntent);
+            }
         });
 
         spinnerDepartmentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

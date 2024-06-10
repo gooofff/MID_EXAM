@@ -48,6 +48,8 @@ public class DepartmentsActivity extends AppCompatActivity {
     Spinner spinnerParentID;
     FirebaseDatabaseHelper dbHelper;
     Button btnDelete, btnUpdate, btnBack;
+    ImageButton btnCall, btnSMS;
+
     ArrayList<Department> departments = new ArrayList<>();
     ArrayList<String> departmentNames = new ArrayList<>();
     String selectedDepartmentID;
@@ -76,6 +78,8 @@ public class DepartmentsActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
         btnDelete = findViewById(R.id.btnDelete);
         btnBack = findViewById(R.id.btnBack);
+        btnCall = findViewById(R.id.btnCall);
+        btnSMS = findViewById(R.id.btnSMS);
         dbHelper = new FirebaseDatabaseHelper();
 
         loadDepartmentsAndSetSelection();
@@ -123,6 +127,26 @@ public class DepartmentsActivity extends AppCompatActivity {
             finish();
         });
 
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = edtPhone.getText().toString().trim();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            }
+        });
+
+        btnSMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = edtPhone.getText().toString().trim();
+                Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                smsIntent.setData(Uri.parse("sms:" + phoneNumber));
+                startActivity(smsIntent);
+            }
+        });
+
         spinnerParentID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,8 +156,6 @@ public class DepartmentsActivity extends AppCompatActivity {
                     Department selectedDepartment = departments.get(position - 1);
                     selectedDepartmentID = selectedDepartment.getDepartmentID();
                 }
-//                Department selectedDepartment = (Department) parent.getItemAtPosition(position);
-//                selectedDepartmentID = selectedDepartment.getDepartmentID();
             }
 
             @Override
