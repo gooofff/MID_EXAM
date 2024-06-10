@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:hint="Tạo nhân viên mới"
+                android:hint="Thêm nhân viên mới"
                 android:textColor="#74B9FF"
                 android:textColorHint="#74B9FF"
                 android:textSize="20sp" />
